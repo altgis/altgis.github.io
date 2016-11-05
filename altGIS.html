@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>altGIS</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  <link rel="shortcut icon" href="icons/rose.png" />
+
+  <style>
+    html, body {height: 100%;}
+    #map-canvas{width:100%; height:100px;}
+    .navbar{border-radius:0px;padding:0px;margin:0px;}
+    #legend {margin:10px;padding:10px;background-color:white;border: 1px solid black;}
+    #content {width:450px;}
+    #content img{float:left; padding-right:10px;}
+    #content h4{background-color:grey; padding:5px;color:#FFFFFF;}
+  </style>
+
+
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?"></script>
+
+
+    <script type="text/javascript">
+
+var markers=[
+["Paranormal","Lady in Grey","A lady in grey was seen to walk in the grounds of the French Gardens, now the site of the South Oxfordshire District Council. Local stories are that this is the ghost of Lady Wittenham, wife of George Denison Faber, 1st Baron Wittenham.",51.601401,-1.112802],
+["Paranormal","Kassam Stadium","Gypsies evicted from the site when the stadium was being built are reported to have put a curse on the ground.",51.716506,-1.207927],
+["Mythical","Dragon Slaying","Site where George killed the dragon",51.579841,-1.567413]
+];
+
+
+var infowindow;
+var map;
+var geocoder;
+var onMap = [];
+var filtered = [];
+var state = {
+  'Mythical': 0,
+  'Paranormal': 1
+};
+var layers = Object.keys(state);
+var mapStyle = [{"featureType":"all","elementType":"all","stylers":[{"hue":"#ff0000"},{"saturation":-100},{"lightness":-30}]},{"featureType":"all","elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"all","elementType":"labels.text.stroke","stylers":[{"color":"#353535"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#656565"}]},{"featureType":"poi","elementType":"geometry.fill","stylers":[{"color":"#505050"}]},{"featureType":"poi","elementType":"geometry.stroke","stylers":[{"color":"#808080"}]},{"featureType":"road","elementType":"geometry","stylers":[{"color":"#454545"}]}];
+//#cc7002
+
+      function initializeMap() {
+        infoWindow = new google.maps.InfoWindow({});
+        geocoder = new google.maps.Geocoder();
+
+
+        var mapOptions = {
+          center : new google.maps.LatLng(51.65, -1.1),
+          zoom: 11,
+          styles: mapStyle
+        };
+        map = new google.maps.Map(document.getElementById('map-canvas'),
+            mapOptions);
+
+        map.controls[google.maps.ControlPosition.RIGHT_TOP].push(document.getElementById('legend'));
+
+        markerPop();
+
+//kml layer...
+var kmlLayer = new google.maps.KmlLayer({
+    url: 'https://dl.dropboxusercontent.com/u/20302112/dists.kml',
+ //   preserveViewport: true,
+    clickable: false,
+    suppressInfoWindows: true
+  });
+
+kmlLayer.setMap(map);
+
+
+// end of initial function
+      }
+
+
+//function which clears all the lists, loops thru layers in 'state' and sends any layers which are visible (1) to the datatomarkers function
+function markerPop(){
+
+clearMarkers();
+
+for (i = 0; i < layers.length; i++) {
+  if (state[layers[i]] == 1) {
+dataToMarkers(layers[i]);
+  }
+
+}
+
+}
+
+//clear map markers
+
+function clearMarkers(){
+        for (var i = 0; i < onMap.length; i++) {
+          onMap[i].setMap();
+        }
+        filtered = [];
+        onMap = [];
+}
+
+
+//this function loops through all the markers and adds those whose layer matches the input parameter from markerpop to the 'filtered' list it then sends everything in 'filtered' to the addmarkers function for adding to the map (function could be simplified)
+function dataToMarkers(series){
+for (var i = 0; i < markers.length; i++) {
+    if (markers[i][0] == series){
+filtered.push(markers[i]);
+}
+}
+
+
+for (var i = 0; i < filtered.length; i++) {
+    addMarker(filtered[i][1],filtered[i][3],filtered[i][4],filtered[i][2],filtered[i][0]);
+}
+}
+
+
+//function which returns a location based on string input
+      function codeAddress() {
+       var address = document.getElementById("address").value;
+
+       geocoder.geocode( { 'address': address, region: "GB"}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+
+        map.setCenter(results[0].geometry.location);
+ 
+      } else {
+        alert("Geocode was not successful for the following reason: " + status);
+      }
+    });
+  }
+
+//adding the filtered markers to the map
+
+function addMarker(nom,lat,lon,text,series) {
+
+    var marker = new google.maps.Marker({
+        position: new google.maps.LatLng(lat,lon),
+        title: nom,
+        map: map,
+        icon:"icons/"+series+".png"
+    });
+    onMap.push(marker);
+    var content = "<div id='content'><h4>" + nom + "</h4><p align='justify'>" + text + "</p></div>";
+
+    google.maps.event.addListener(marker, 'click', function () {
+        infoWindow.setContent(content);
+        infoWindow.open(map, this);
+    });
+    
+
+
+}
+
+
+//geolocation bit
+    function geolocate() {
+        if (navigator.geolocation) {
+            // Execute geolocation code
+            navigator.geolocation.getCurrentPosition(exportPosition, errorPosition);
+        } else {
+            // Execute code for geolocation not available
+            alert("Your browser does not support geolocation.");
+        }
+    }
+
+// code for geolocation available
+function exportPosition(position) {
+    var lat = position.coords.latitude;
+    var lon = position.coords.longitude;
+    var coords = new google.maps.LatLng(lat, lon);
+    map.setCentre(coords);
+
+}
+
+// Code for geolocation not available
+function errorPosition() {
+    alert("We could not get your location");
+}
+
+      google.maps.event.addDomListener(window, 'load', initializeMap);
+
+
+    </script>
+
+
+</head>
+
+
+<body>
+
+<nav class="navbar navbar-inverse"> <!--navbar navbar-inverse (for black menu) (default for normal)-->
+  <div class="container-fluid">
+    <div class="navbar-header">
+
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span> 
+      </button>
+            <a class="navbar-brand" href="#">alt<b>GIS</b> - the alternative JointGIS...</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">An Option</a></li>
+      </ul>
+
+
+    <form class="navbar-form navbar-right" role="search">
+      <div class="form-group">
+        <input type="textbox" class="form-control" id="address" placeholder="Search">
+      </div>
+      <button type="button" class="btn btn-default" id="go"><span class="glyphicon glyphicon-search"></span></button>
+      <button type="button" class="btn btn-default" id="geo"><span class="glyphicon glyphicon-map-marker"></span> Geolocate</button>
+    </form>
+
+
+    </div>
+  </div>
+</nav>
+   
+
+
+<div id="map-canvas"></div>
+<div id="legend">
+<form action="">
+<input type="checkbox" name="toggle" checked="checked" value="Paranormal"> <img src="icons/Paranormal.png" width="25px"> Sites of Paranormal Activity<br>
+<input type="checkbox" name="toggle"  value="Mythical"> <img src="icons/Mythical.png" width="25px"> Mythical Beasts<br>
+
+
+</form>
+</div>
+
+
+
+
+
+<script>
+  $("div#map-canvas").height($(window).height()-52);
+
+  $( window ).resize(function() {
+    $("div#map-canvas").height($(window).height()-52);
+  });
+
+  $("#go").click(codeAddress);
+
+  $("#geo").click(geolocate);
+
+  $(":checkbox").click(function() {
+      var chng = $(this).attr("value");
+      if (state[chng] == 1) {
+         state[chng] = 0;
+      }
+      else {state[chng] = 1;} 
+      markerPop();
+  });
+
+</script>
+</body>
+</html>
