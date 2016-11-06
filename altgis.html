@@ -27,8 +27,8 @@
     <script type="text/javascript">
 
 var markers=[
-["Paranormal","Lady in Grey","A lady in grey was seen to walk in the grounds of the French Gardens, now the site of the South Oxfordshire District Council. Local stories are that this is the ghost of Lady Wittenham, wife of George Denison Faber, 1st Baron Wittenham.",51.601401,-1.112802],
-["Paranormal","Kassam Stadium","Gypsies evicted from the site when the stadium was being built are reported to have put a curse on the ground.",51.716506,-1.207927],
+["Ghost","Lady in Grey","A lady in grey was seen to walk in the grounds of the French Gardens, now the site of the South Oxfordshire District Council. Local stories are that this is the ghost of Lady Wittenham, wife of George Denison Faber, 1st Baron Wittenham.",51.601401,-1.112802],
+["Cursed","Kassam Stadium","Gypsies evicted from the site when the stadium was being built are reported to have put a curse on the ground.",51.716506,-1.207927],
 ["Mythical","Dragon Slaying","Site where George killed the dragon",51.579841,-1.567413]
 ];
 
@@ -40,7 +40,8 @@ var onMap = [];
 var filtered = [];
 var state = {
   'Mythical': 0,
-  'Paranormal': 1
+  'Ghost': 1,
+  'Cursed':1,
 };
 var layers = Object.keys(state);
 var mapStyle = [{"featureType":"all","elementType":"all","stylers":[{"hue":"#ff0000"},{"saturation":-100},{"lightness":-30}]},{"featureType":"all","elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"all","elementType":"labels.text.stroke","stylers":[{"color":"#353535"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#656565"}]},{"featureType":"poi","elementType":"geometry.fill","stylers":[{"color":"#505050"}]},{"featureType":"poi","elementType":"geometry.stroke","stylers":[{"color":"#808080"}]},{"featureType":"road","elementType":"geometry","stylers":[{"color":"#454545"}]}];
@@ -231,9 +232,10 @@ function errorPosition() {
   <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">Layers <span class="caret"></span> </button>
     <div id="demo" class="collapse">
       <ul class="list-group">
-  <li class="list-group-item"><input type="checkbox" name="toggle" checked="checked" value="Paranormal">  Sites of Paranormal Activity <img src="icons/Paranormal.png" width="25px"></li>
-  <li class="list-group-item"><input type="checkbox" name="toggle"  value="Mythical"> <img src="icons/Mythical.png" width="25px"> Mythical Beasts</li>
-  <li class="list-group-item">Third item</li>
+  <li class="list-group-item"><input type="checkbox" name="toggle" checked="checked" value="Ghost">  Ghost Sightings <img src="icons/Paranormal.png" width="25px"></li>
+  <li class="list-group-item"><input type="checkbox" name="toggle" checked="checked" value="Cursed">  Cursed Land <img src="icons/Paranormal.png" width="25px"></li>
+  <li class="list-group-item"><input type="checkbox" name="toggle"  value="Mythical"> Mythical Beasts <img src="icons/Mythical.png" width="25px"></li>
+
 </ul>
 
 
