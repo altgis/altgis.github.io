@@ -53,7 +53,12 @@ var mapStyle = [{"featureType":"all","elementType":"all","stylers":[{"hue":"#ff0
         var mapOptions = {
           center : new google.maps.LatLng(51.65, -1.1),
           zoom: 11,
-          styles: mapStyle
+          styles: mapStyle,
+          mapTypeControl: true,
+          mapTypeControlOptions: {
+              style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+              position: google.maps.ControlPosition.TOP_RIGHT
+          }
         };
         map = new google.maps.Map(document.getElementById('map-canvas'),
             mapOptions);
