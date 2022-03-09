@@ -1,55 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>template</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="https://www.w3schools.com/appml/2.0.3/appml.js"></script>
+	
+	<title>Dino Map</title>
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+		}
+		.leaflet-container {
+			height: 600px;
+
+			max-width: 100%;
+			max-height: 100%;
+		}
+		.din {
+			border: 5px solid brown;
+			height: 80px;
+			width: 80px;
+		}
+			.blank {
+		border: 5px solid brown;
+		height: 80px;
+		width: 80px;
+		}
+		
+
+#footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+			height: 90px;
+		background-color: #d3c075;
+		margin: 0px;
+		border: 0px;
+}
+
+	</style>
+
+	
 </head>
 <body>
-  
-<div class="jumbotron text-center">
-  <h1>Big Space for Title</h1>
-  <p>Smaller space for sub-text</p> 
+
+
+<div id="map" style="height: 600px;"></div>
+<div id="footer">
+<img class='din' id='din1' src='dinos/din1.png' />
+<img class='din' id='din2' src='dinos/din2.png' />
+<img class='din' id='din3' src='dinos/din3.png' />
+<img class='din' id='din4' src='dinos/din4.png' />
+<img class='din' id='din5' src='dinos/din5.png' />
+<img class='din' id='din6' src='dinos/din6.png' />
+<img class='din' id='din7' src='dinos/din7.png' />
+<img class='din' id='din8' src='dinos/din8.png' />
+<img src='dinos/nom.png' />
 </div>
-
-<div class="container">
-  <div class="row">
-    <div class="col-sm-3">
-      <h3>Column 1</h3>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
-    </div>
-    <div class="col-sm-6">
+<script>
+var thing = 'tank';
+ num = 1;
 
 
-      <h3>Column 2</h3>
-<table class="table-striped" appml-data="data.js">
-<tr>
-  <th>Customer</th>
-  <th>City</th>
-  <th>Country</th>
-</tr>
-<tr appml-repeat="records">
-  <td>{{CustomerName}}</td>
-  <td>{{City}}</td>
-  <td>{{Country}}</td>
-</tr>
-</table>
-    </div>
+var osm = new L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '&copy; OpenStreetMap',maxZoom: 18})
+var mapbox = new L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox/streets-v11',
+    tileSize: 512,
+    zoomOffset: -1,
+    accessToken: 'pk.eyJ1IjoiZnJhc2giLCJhIjoiYTY4OV9PayJ9.yJh_ctanq5iSAEcwDTxoHg'
+})
+var sat = new L.tileLayer('http://{s}.tiles.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZnJhc2giLCJhIjoiYTY4OV9PayJ9.yJh_ctanq5iSAEcwDTxoHg', {attribution: '&copy; Mapbox &copy; OpenStreetMap', maxZoom: 18});
+var ter = new L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg', {attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',maxZoom: 18})
+var war = new L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg', {attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.',maxZoom: 18})
+
+var baseMaps = {
+    "Basic OSM": osm,
+    "Mapbox": mapbox,
+	"Satellite": sat,
+	"Terrain": ter,
+	"Watercolour": war
+};
+	var map = L.map('map',{layers: war, minZoom: 2}).setView([30, -1.188583], 3);
+
+L.control.layers(baseMaps).addTo(map);
+
+//var marker = L.marker([51.646572, -1.188583], {icon: fIcon(), draggable: true}).bindPopup('<b>Oh no! A Triceratops');
+
+//this function returns an icon object of the specified type
+	function fIcon(e) {
+var icon = L.icon({
+    iconUrl: 'dinos/'+thing+'.png',
+//   shadowUrl: 'leaf-shadow.png',
+
+    iconSize:     [100, 100], // size of the icon
+//    shadowSize:   [50, 64], // size of the shadow
+    iconAnchor:   [50, 50], // point of the icon which will correspond to marker's location
+//    shadowAnchor: [4, 62],  // the same for the shadow
+    popupAnchor:  [0, -50] // point from which the popup should open relative to the iconAnchor
+
+});
+	return icon;
+	}
 
 
-    <div class="col-sm-3">
-      <h3>Column 3</h3> 
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
-    </div>
-  </div>
-</div>
+//function to remove marker
+	function remove(e) {
+	this.remove();
+	}
 
-<div class="row" appml-include-html="inc_footer.htm"></div>
+
+//function that adds new markers according to selected icon
+	function onMapClick(e) {
+	num=num+1;
+	var nom = 'marker' + num;
+	nom = L.marker(e.latlng, {icon: fIcon(), draggable: true}).addTo(map).on('contextmenu', remove).bindPopup("I am a Tank.");
+	}
+
+	map.on('click', onMapClick);
+	
+
+	
+//jquery page set up stuff
+$(document).ready(function(){
+  var h = $( window ).height();
+  $('#map').height(h-90);
+  $(".din").click(function(){
+	thing = this.id
+	$(".din").css("border","5px solid brown");
+	$(this).css("border","5px solid red");
+  });
+  $("#remove").click(function(){  
+	alert('clicked');
+	trex.remove();
+   });
+   $( window ).resize(function() {
+  var h = $( window ).height();
+  $('#map').height(h-90);
+});
+});
+
+</script>
+
+
+
 </body>
 </html>
