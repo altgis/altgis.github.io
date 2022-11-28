@@ -18,7 +18,6 @@
 		}
 		.leaflet-container {
 			height: 600px;
-
 			max-width: 100%;
 			max-height: 100%;
 		}
@@ -26,23 +25,22 @@
 			border: 5px solid brown;
 			height: 80px;
 			width: 80px;
+			margin-right: 5px;
 		}
-			.blank {
-		border: 5px solid brown;
-		height: 80px;
-		width: 80px;
+		.blank {
+			border: 5px solid brown;
+			height: 80px;
+			width: 80px;
 		}
-		
-
-#footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-			height: 90px;
-		background-color: #d3c075;
-		margin: 0px;
-		border: 0px;
-}
+		#footer {
+			position: fixed;
+			bottom: 0;
+			width: 100%;
+			height: 188px;
+			background-color: #d3c075;
+			margin: 0px;
+			border: 0px;
+			overflow-y: auto;
 
 	</style>
 
@@ -52,7 +50,7 @@
 
 
 <div id="map" style="height: 600px;"></div>
-<div id="footer">
+<!-- <div id="footer">
 <img class='din' id='din1' src='dinos/din1.png' />
 <img class='din' id='din2' src='dinos/din2.png' />
 <img class='din' id='din3' src='dinos/din3.png' />
@@ -65,12 +63,46 @@
 <img class='din' id='tank' src='dinos/tank.png' />
 <img class='din' id='tank2' src='dinos/tank2.png' />
 <img class='din' id='plane2' src='dinos/plane2.png' />
+<img class='din' id='ps_m33' src='dinos/ps_m33.png' />
+<img class='din' id='ps_mr' src='dinos/ps_mr.png' />
+<img class='din' id='ps_a' src='dinos/ps_a.png' />
+<img class='din' id='ps_v' src='dinos/ps_v.png' />
+<img class='din' id='ps_lct' src='dinos/ps_lct.png' />
+<img class='din' id='ida_sub' src='dinos/ida_sub.png' />
 <img src='dinos/nom.png' />
+</div> -->
+<div id="footer">
 </div>
 <script>
 var thing = 'tank';
  num = 1;
-
+var data = [
+[1,"din1","I am a Spinosaurus"],
+[2,"din2","I am a T-Rex"],
+[3,"din3","I am a Stegasaurus"],
+[4,"din4","I am a Plesiosaur"],
+[5,"din5","I am a Triceratops"],
+[6,"din6","I am a Diplodocus"],
+[7,"din7","I am a Pteranodon"],
+[8,"din8","I am a Jeep"],
+[9,"plane","I am a Jet Fighter"],
+[10,"tank","I am tank"],
+[11,"tank2","I am tank"],
+[12,"plane2","I am a Jet Fighter"],
+[13,"ps_m33","HMS M.33 (drawn by Austen)"],
+[14,"ps_mr","Mary Rose (drawn by Austen)"],
+[15,"ps_a","HMS Alliance (drawn by Austen)"],
+[16,"ps_v","HMS Victory (drawn by Austen)"],
+[17,"ps_lct","Landing Craft LCT 4074 (drawn by Austen)"],
+[18,"ida_sub2","Birthday Card Submarine (drawn by Ida)"],
+[19,"aust","Austen in Victorian mode"],
+[20,"castle1","A fairy castle"],
+[21,"arma1","Coloured by Austen 28th November 2022"],
+[22,"sub1","Coloured by Elliott 28th November 2022"],
+[23,"skel1a","Skeleton"],
+[24,"skel2","Skeleton"],
+[24,"skel3","Skeleton Leader"]
+];
 
 var osm = new L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '&copy; OpenStreetMap',maxZoom: 18})
 var mapbox = new L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
@@ -84,15 +116,17 @@ var mapbox = new L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x
 var sat = new L.tileLayer('http://{s}.tiles.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZnJhc2giLCJhIjoiYTY4OV9PayJ9.yJh_ctanq5iSAEcwDTxoHg', {attribution: '&copy; Mapbox &copy; OpenStreetMap', maxZoom: 18});
 var ter = new L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg', {attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',maxZoom: 18})
 var war = new L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg', {attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.',maxZoom: 18})
+var ton = new L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png', {attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.',maxZoom: 18})
 
 var baseMaps = {
     "Basic OSM": osm,
     "Mapbox": mapbox,
 	"Satellite": sat,
 	"Terrain": ter,
-	"Watercolour": war
+	"Watercolour": war,
+	"Black & White": ton
 };
-	var map = L.map('map',{layers: war, minZoom: 2}).setView([30, -1.188583], 3);
+	var map = L.map('map',{layers: war, minZoom: 2,scrollWheelZoom: false}).setView([30, -1.188583], 3);
 
 L.control.layers(baseMaps).addTo(map);
 
@@ -125,17 +159,31 @@ var icon = L.icon({
 	function onMapClick(e) {
 	num=num+1;
 	var nom = 'marker' + num;
-	nom = L.marker(e.latlng, {icon: fIcon(), draggable: true}).addTo(map).on('contextmenu', remove).bindPopup("I am a Tank.");
+	nom = L.marker(e.latlng, {icon: fIcon(), draggable: true}).addTo(map).on('contextmenu', remove).bindPopup(popText(thing));
 	}
 
 	map.on('click', onMapClick);
 	
-
+//function to retrieve correct popup text
+	function popText(e) {
+	for (let i = 0; i < data.length; i++) {
+  if (e == data[i][1]){return data[i][2]}
+}
+	}
 	
-//jquery page set up stuff
+
 $(document).ready(function(){
+//create the images at base of page from data
+var text="";
+for (let i = 0; i < data.length; i++) {
+  text += "<img class='din' id='" + data[i][1] + "' src='dinos/" + data[i][1] + ".png' />";
+}
+
+$('#footer').html(text);
+
+//jquery page set up stuff
   var h = $( window ).height();
-  $('#map').height(h-90);
+  $('#map').height(h-188);
   $(".din").click(function(){
 	thing = this.id
 	$(".din").css("border","5px solid brown");
@@ -147,9 +195,10 @@ $(document).ready(function(){
    });
    $( window ).resize(function() {
   var h = $( window ).height();
-  $('#map').height(h-90);
+  $('#map').height(h-188);
 });
 });
+
 
 </script>
 
