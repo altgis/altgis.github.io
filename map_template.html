@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Map Fun</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+  <style>
+    html, body {height: 100%;}
+    #map-canvas{width:100%; height:100px;}
+  </style>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+ <!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+
+
+
+
+
+</head>
+
+
+<body>
+<!--
+<div class="w3-container w3-teal" id='head'>
+  <h1>Maps</h1>
+</div>
+  -->
+  
+<!-- navbar -->
+<div class="w3-bar w3-teal" id='head'>
+  <a href="Index.html" class="w3-bar-item w3-button w3-mobile">Home</a>
+  <a href="dinomap.html" class="w3-bar-item w3-button w3-mobile">Map Game</a>
+  <a href="geoloc.html" class="w3-bar-item w3-button w3-mobile">Austen Locator</a>
+  <a href="map_template.html" class="w3-bar-item w3-button w3-mobile w3-yellow">Map Template</a>
+</div>
+
+
+
+<div id="map-canvas"></div>
+<div class="w3-container w3-teal" id='foot'>
+  <h5>Footer</h5>
+</div>
+
+
+
+
+
+
+<script>
+
+function changeMapSize(){
+	var h = window.innerHeight;
+	var head = document.querySelector('#head');
+	var heighth = head.offsetHeight;
+	var foot = document.querySelector('#foot');
+	var heightf = foot.offsetHeight;
+	var maph = h-heightf-heighth;
+	var element = document.getElementById("map-canvas");
+	element.style.height = maph+"px";
+}
+changeMapSize()
+
+
+window.addEventListener('resize', function(event){
+  changeMapSize();
+});
+
+
+var mymap = L.map('map-canvas').setView([52.771780, -1.206324], 14);
+var tileOptions = {
+  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+  maxZoom: 18
+};
+
+L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', tileOptions).addTo(mymap);
+
+
+</script>
+</body>
+</html>
