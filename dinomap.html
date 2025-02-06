@@ -152,7 +152,7 @@ var baseMaps = {
 	"Watercolour": war,
 	"Black & White": ton
 };
-	var map = L.map('map',{layers: war, minZoom: 2,scrollWheelZoom: false,dragging: false}).setView([30, -1.188583], 3);
+	var map = L.map('map',{layers: osm, minZoom: 2,scrollWheelZoom: false,dragging: false}).setView([30, -1.188583], 3);
 
 L.control.layers(baseMaps).addTo(map);
 map.doubleClickZoom.disable(); 
